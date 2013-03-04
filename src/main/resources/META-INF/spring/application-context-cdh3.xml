@@ -8,6 +8,7 @@
 
     <hdp:configuration id="hadoopConfiguration">
         fs.default.name=hdfs://localhadoop:9000
+        mapred.job.tracker=localhadoop:9001
         mapred.child.java.opts=-Xmx1024m
         com.esri.xmin=-180.0
         com.esri.ymin=-90.0
@@ -18,6 +19,7 @@
     </hdp:configuration>
 
     <hdp:job id="mr-job"
+             jar-by-class="com.esri.density.Main"
              input-path="/user/mraad_admin/input"
              output-path="/user/mraad_admin/output"
              mapper="com.esri.density.DensityMapper"

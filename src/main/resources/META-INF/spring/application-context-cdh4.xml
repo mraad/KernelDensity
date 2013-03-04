@@ -8,6 +8,8 @@
 
     <hdp:configuration id="hadoopConfiguration">
         fs.defaultFS=hdfs://h0:8020
+        mapred.job.tracker=h0:8021
+        mapred.child.java.opts=-Xmx1024m
         com.esri.xmin=-180.0
         com.esri.ymin=-90.0
         com.esri.xmax=180.0
@@ -17,6 +19,7 @@
     </hdp:configuration>
 
     <hdp:job id="mr-job"
+             jar-by-class="com.esri.density.Main"
              input-path="/user/root/input"
              output-path="/user/root/output"
              mapper="com.esri.density.DensityMapper"
@@ -25,7 +28,7 @@
 
     <hdp:script id="preAction" language="javascript">
         if (fsh.test("/user/root/output")){
-            fsh.rmr("/user/root/output")
+        fsh.rmr("/user/root/output")
         }
     </hdp:script>
 
