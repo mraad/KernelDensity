@@ -8,6 +8,7 @@
 
     <hdp:configuration id="hadoopConfiguration">
         fs.default.name=hdfs://localhadoop:9000
+        mapred.child.java.opts=-Xmx1024m
         com.esri.xmin=-180.0
         com.esri.ymin=-90.0
         com.esri.xmax=180.0

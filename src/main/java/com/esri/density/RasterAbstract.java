@@ -55,7 +55,7 @@ public abstract class RasterAbstract implements Callable
         final Path path = new Path(defaultFS + m_hdfsPath);
         final FileSystem fileSystem = path.getFileSystem(m_configuration);
         final FileStatus fileStatus = fileSystem.getFileStatus(path);
-        if (fileStatus.isDir())
+        if (fileStatus.isDir()) // use isDirectory() for CDH4
         {
             for (final FileStatus childStatus : fileSystem.listStatus(path))
             {
@@ -72,8 +72,10 @@ public abstract class RasterAbstract implements Callable
                         final LineNumberReader lineNumberReader = new LineNumberReader(new InputStreamReader(dataInputStream));
                         for (String line = lineNumberReader.readLine(); line != null; line = lineNumberReader.readLine())
                         {
-                            final String[] tokens = line.split("\t");
-                            map.put(tokens[0], Double.parseDouble(tokens[1]));
+                            final int index = line.indexOf('\t');
+                            final String key = line.substring(0, index);
+                            final String val = line.substring(index + 1);
+                            map.put(key, Double.parseDouble(val));
                         }
                     }
                     finally
