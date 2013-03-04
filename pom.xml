@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.esri</groupId>
+    <artifactId>KernelDensity</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>KernelDensity</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hadoop.cdh3>0.20.2-cdh3u5</hadoop.cdh3>
+        <hadoop.cdh4>2.0.0-cdh4.1.3</hadoop.cdh4>
+        <hadoop.cdh4mr1>2.0.0-mr1-cdh4.1.3</hadoop.cdh4mr1>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>spring-release</id>
+            <name>Spring Release</name>
+            <url>http://repo.springframework.org/release</url>
+        </repository>
+        <repository>
+            <id>cloudera-releases</id>
+            <name>Cloudera Releases</name>
+            <url>https://repository.cloudera.com/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <id>cloudera-repos</id>
+            <name>Cloudera Repos</name>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.2.2</version>
+                <configuration>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <programs>
+                        <program>
+                            <mainClass>com.esri.density.Main</mainClass>
+                            <name>KernelDensity</name>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>cdh3</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-core</artifactId>
+                    <version>${hadoop.cdh3}</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-mrunit</artifactId>
+                    <version>${hadoop.cdh3}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>cdh4</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-tools</artifactId>
+                    <version>${hadoop.cdh4mr1}</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-common</artifactId>
+                    <version>${hadoop.cdh4}</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-hdfs</artifactId>
+                    <version>${hadoop.cdh4}</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.mrunit</groupId>
+                    <artifactId>mrunit</artifactId>
+                    <version>0.9.0-incubating</version>
+                    <classifier>hadoop2</classifier>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+</project>

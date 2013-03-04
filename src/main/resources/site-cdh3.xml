@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://localhadoop:9000</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/hadoop/mraad_admin</value>
+    </property>
+
+    <property>
+        <name>com.esri.xmin</name>
+        <value>-180</value>
+    </property>
+    <property>
+        <name>com.esri.ymin</name>
+        <value>-90</value>
+    </property>
+    <property>
+        <name>com.esri.xmax</name>
+        <value>180</value>
+    </property>
+    <property>
+        <name>com.esri.ymax</name>
+        <value>90</value>
+    </property>
+    <property>
+        <name>com.esri.cellSize</name>
+        <value>0.1</value>
+    </property>
+    <property>
+        <name>com.esri.searchRadius</name>
+        <value>10</value>
+    </property>
+</configuration>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
+
+    <hdp:configuration id="hadoopConfiguration" resources="classpath:/site-cdh3.xml"/>
+
+    <hdp:job id="mr-job"
+             input-path="/user/mraad_admin/input"
+             output-path="/user/mraad_admin/output"
+             mapper="com.esri.density.DensityMapper"
+             combiner="com.esri.density.DensityReducer"
+             reducer="com.esri.density.DensityReducer"/>
+
+    <hdp:script id="preAction" language="javascript">
+        if (fsh.test("/user/mraad_admin/output")){
+        fsh.rmr("/user/mraad_admin/output")
+        }
+    </hdp:script>
+
+    <bean id="postAction" class="com.esri.density.RasterFloat">
+        <property name="configuration" ref="hadoopConfiguration"/>
+        <property name="hdfsPath" value="/user/mraad_admin/output"/>
+        <property name="filePath" value="/tmp/raster.flt"/>
+    </bean>
+
+    <hdp:job-runner id="runner"
+                    run-at-startup="true"
+                    pre-action="preAction"
+                    post-action="postAction"
+                    job-ref="mr-job"/>
+
+</beans>
