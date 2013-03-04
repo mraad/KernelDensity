@@ -6,7 +6,15 @@
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
 
-    <hdp:configuration id="hadoopConfiguration" resources="classpath:/site-cdh3.xml"/>
+    <hdp:configuration id="hadoopConfiguration">
+        fs.default.name=hdfs://localhadoop:9000
+        com.esri.xmin=-180.0
+        com.esri.ymin=-90.0
+        com.esri.xmax=180.0
+        com.esri.ymax=90.0
+        com.esri.cellSize=0.1
+        com.esri.searchRadius=10
+    </hdp:configuration>
 
     <hdp:job id="mr-job"
              input-path="/user/mraad_admin/input"
