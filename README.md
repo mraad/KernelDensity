@@ -2,7 +2,7 @@
 KernelDensity
 =============
 
-KernelDensity analysis on Hadoop MapReduce
+[KernelDensity analysis on Hadoop MapReduce] (http://thunderheadxpler.blogspot.com/2013/03/bigdata-kernel-density-analysis-on.html "KernelDensity analysis on Hadoop MapReduce")
 
 ## Building and running
 
