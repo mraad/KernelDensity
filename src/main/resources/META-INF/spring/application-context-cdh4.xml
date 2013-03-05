@@ -7,34 +7,34 @@
     http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
 
     <hdp:configuration id="hadoopConfiguration">
-        fs.defaultFS=hdfs://h0:8020
-        mapred.job.tracker=h0:8021
+        fs.defaultFS=hdfs://10.12.51.70:8020
+        mapred.job.tracker=10.12.51.70:8021
         mapred.child.java.opts=-Xmx1024m
         com.esri.xmin=-180.0
         com.esri.ymin=-90.0
         com.esri.xmax=180.0
         com.esri.ymax=90.0
-        com.esri.cellSize=0.1
-        com.esri.searchRadius=10
+        com.esri.cellSize=1
+        com.esri.searchRadius=3
     </hdp:configuration>
 
     <hdp:job id="mr-job"
              jar-by-class="com.esri.density.Main"
-             input-path="/user/root/input"
-             output-path="/user/root/output"
+             input-path="/pi/input"
+             output-path="/pi/output"
              mapper="com.esri.density.DensityMapper"
              combiner="com.esri.density.DensityReducer"
              reducer="com.esri.density.DensityReducer"/>
 
     <hdp:script id="preAction" language="javascript">
-        if (fsh.test("/user/root/output")){
-        fsh.rmr("/user/root/output")
+        if (fsh.test("/pi/output")){
+        fsh.rmr("/pi/output")
         }
     </hdp:script>
 
     <bean id="postAction" class="com.esri.density.RasterFloat">
         <property name="configuration" ref="hadoopConfiguration"/>
-        <property name="hdfsPath" value="/user/root/output"/>
+        <property name="hdfsPath" value="/pi/output"/>
         <property name="filePath" value="/tmp/raster.flt"/>
     </bean>
 
