@@ -59,6 +59,18 @@ public class DensityMapper extends Mapper<LongWritable, Text, Text, DoubleWritab
         }
 
         final double px = Double.parseDouble(tokens[1]);
+        final double py = Double.parseDouble(tokens[2]);
+        final double pw = Double.parseDouble(tokens[3]);
+
+        mapDensity(context, px, py, pw);
+    }
+
+    private void mapDensity(
+            final Context context,
+            final double px,
+            final double py,
+            final double pw) throws IOException, InterruptedException
+    {
         double xmin = px - m_searchRadius;
         double xmax = px + m_searchRadius;
         if (xmax < m_xmin || m_xmax < xmin)
@@ -66,15 +78,12 @@ public class DensityMapper extends Mapper<LongWritable, Text, Text, DoubleWritab
             return;
         }
 
-        final double py = Double.parseDouble(tokens[2]);
         double ymin = py - m_searchRadius;
         double ymax = py + m_searchRadius;
         if (ymax < m_ymin || m_ymax < ymin)
         {
             return;
         }
-
-        final double pw = Double.parseDouble(tokens[3]);
 
         xmin -= m_cellSize;
         xmax += m_cellSize;

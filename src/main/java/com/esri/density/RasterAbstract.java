@@ -55,7 +55,7 @@ public abstract class RasterAbstract implements Callable
         final Path path = new Path(defaultFS + m_hdfsPath);
         final FileSystem fileSystem = path.getFileSystem(m_configuration);
         final FileStatus fileStatus = fileSystem.getFileStatus(path);
-        if (fileStatus.isDir()) // use isDirectory() for CDH4
+        if (fileStatus.isDirectory()) // use isDir() for CDH3
         {
             for (final FileStatus childStatus : fileSystem.listStatus(path))
             {
