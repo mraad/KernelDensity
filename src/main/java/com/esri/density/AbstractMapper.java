@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public abstract class AbstractMapper extends Mapper<LongWritable, Text, Text, DoubleWritable>
 {
-    private static final Log log = LogFactory.getLog(DensityMapper.class);
+    private static final Log log = LogFactory.getLog(CellMapper.class);
 
     private final KernelFunction m_kernelFunction = new EpanechnikovKernelFunction();
     private final StringBuffer m_stringBuffer = new StringBuffer();

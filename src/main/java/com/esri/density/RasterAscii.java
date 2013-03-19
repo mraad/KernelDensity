@@ -7,19 +7,17 @@ import java.util.Map;
 
 /**
  */
-public class RasterAscii extends RasterAbstract
+public final class RasterAscii extends RasterAbstract
 {
     @Override
-    protected void writeRaster(final Map<String, Double> map) throws FileNotFoundException
+    protected void writeRaster(
+            final Map<String, Double> map,
+            final double xmin,
+            final double ymin,
+            final int ncols,
+            final int nrows,
+            final double cell) throws FileNotFoundException
     {
-        final double xmin = Double.parseDouble(m_configuration.get("com.esri.xmin", "-180"));
-        final double ymin = Double.parseDouble(m_configuration.get("com.esri.ymin", "-90"));
-        final double xmax = Double.parseDouble(m_configuration.get("com.esri.xmax", "180"));
-        final double ymax = Double.parseDouble(m_configuration.get("com.esri.ymax", "90"));
-        final double cellSize = Double.parseDouble(m_configuration.get("com.esri.cellSize", "1"));
-        final int ncols = (int) Math.floor((xmax - xmin) / cellSize);
-        final int nrows = (int) Math.floor((ymax - ymin) / cellSize);
-
         final PrintWriter pw = new PrintWriter(new File(m_filePath));
         try
         {
@@ -32,7 +30,7 @@ public class RasterAscii extends RasterAbstract
             pw.print("YLLCORNER ");
             pw.println(ymin);
             pw.print("CELLSIZE ");
-            pw.println(cellSize);
+            pw.println(cell);
             pw.println("NODATA_VALUE 0");
             final StringBuffer stringBuffer = new StringBuffer();
             int i = nrows - 1;

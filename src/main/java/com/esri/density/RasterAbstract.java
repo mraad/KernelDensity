@@ -21,9 +21,9 @@ public abstract class RasterAbstract implements Callable
 {
     protected static final Log log = LogFactory.getLog(RasterFloat.class);
 
+    protected Configuration m_configuration;
     protected String m_hdfsPath;
     protected String m_filePath;
-    protected Configuration m_configuration;
 
     public void setConfiguration(Configuration configuration)
     {
@@ -43,8 +43,17 @@ public abstract class RasterAbstract implements Callable
     @Override
     public Object call() throws Exception
     {
+        final double xmin = WebMercator.longitudeToX(Double.parseDouble(m_configuration.get("com.esri.xmin", "-180")));
+        final double xmax = WebMercator.longitudeToX(Double.parseDouble(m_configuration.get("com.esri.xmax", "180")));
+        final double ymin = WebMercator.latitudeToY(Double.parseDouble(m_configuration.get("com.esri.ymin", "-90")));
+        final double ymax = WebMercator.latitudeToY(Double.parseDouble(m_configuration.get("com.esri.ymax", "90")));
+        final double cell = Double.parseDouble(m_configuration.get("com.esri.cell", "60"));
+
+        final int ncols = (int) Math.floor((xmax - xmin) / cell);
+        final int nrows = (int) Math.floor((ymax - ymin) / cell);
+
         final Map<String, Double> map = loadMapFromHDFS();
-        writeRaster(map);
+        writeRaster(map, xmin, ymin, ncols, nrows, cell);
         return null;
     }
 
@@ -55,7 +64,7 @@ public abstract class RasterAbstract implements Callable
         final Path path = new Path(defaultFS + m_hdfsPath);
         final FileSystem fileSystem = path.getFileSystem(m_configuration);
         final FileStatus fileStatus = fileSystem.getFileStatus(path);
-        if (fileStatus.isDirectory()) // use isDir() for CDH3
+        if (fileStatus.isDir()) // use isDirectory() for CDH4
         {
             for (final FileStatus childStatus : fileSystem.listStatus(path))
             {
@@ -94,5 +103,11 @@ public abstract class RasterAbstract implements Callable
         return val == null ? m_configuration.get("fs.default.name") : val;
     }
 
-    protected abstract void writeRaster(Map<String, Double> map) throws IOException;
+    protected abstract void writeRaster(
+            Map<String, Double> map,
+            final double xmin,
+            final double ymin,
+            final int ncols,
+            final int nrows,
+            final double cell) throws IOException;
 }

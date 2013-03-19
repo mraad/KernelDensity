@@ -7,35 +7,37 @@
     http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
 
     <hdp:configuration id="hadoopConfiguration">
+
         fs.default.name=hdfs://localhadoop:9000
         mapred.job.tracker=localhadoop:9001
         mapred.child.java.opts=-Xmx1024m
-        com.esri.xmin=-180.0
-        com.esri.ymin=-90.0
-        com.esri.xmax=180.0
-        com.esri.ymax=90.0
-        com.esri.cellSize=0.1
-        com.esri.searchRadius=10
+
+        com.esri.xmin=-78.315661043709
+        com.esri.xmax=-76.847342871129
+        com.esri.ymin=38.158960148519
+        com.esri.ymax=39.607107252499
+        com.esri.cell=60
+
     </hdp:configuration>
 
     <hdp:job id="mr-job"
              jar-by-class="com.esri.density.Main"
-             input-path="/user/mraad_admin/input"
-             output-path="/user/mraad_admin/output"
-             mapper="com.esri.density.DensityMapper"
-             combiner="com.esri.density.DensityReducer"
-             reducer="com.esri.density.DensityReducer"/>
+             input-path="/user/mraad_admin/voice"
+             output-path="/user/mraad_admin/raster"
+             mapper="com.esri.density.CellMapper"
+             combiner="com.esri.density.CellReducer"
+             reducer="com.esri.density.CellReducer"/>
 
     <hdp:script id="preAction" language="javascript">
-        if (fsh.test("/user/mraad_admin/output")){
-        fsh.rmr("/user/mraad_admin/output")
+        if (fsh.test("/user/mraad_admin/raster")){
+        fsh.rmr("/user/mraad_admin/raster")
         }
     </hdp:script>
 
-    <bean id="postAction" class="com.esri.density.RasterFloat">
+    <bean id="postAction" class="com.esri.density.RasterAscii">
         <property name="configuration" ref="hadoopConfiguration"/>
-        <property name="hdfsPath" value="/user/mraad_admin/output"/>
-        <property name="filePath" value="/tmp/raster.flt"/>
+        <property name="hdfsPath" value="/user/mraad_admin/raster"/>
+        <property name="filePath" value="/tmp/raster.asc"/>
     </bean>
 
     <hdp:job-runner id="runner"

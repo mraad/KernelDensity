@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  */
-public class DensityMapper extends AbstractMapper
+public class DensityMapper4 extends AbstractMapper
 {
 
     @Override

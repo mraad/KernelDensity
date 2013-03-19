@@ -2,7 +2,7 @@ package com.esri.density;
 
 /**
  */
-public class EpanechnikovKernelFunction implements KernelFunction
+public final class EpanechnikovKernelFunction implements KernelFunction
 {
     @Override
     public double calc(final double x)

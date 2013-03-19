@@ -59,13 +59,13 @@ public class DensityTest
         m_configuration.set("com.esri.xmax", "180");
         m_configuration.set("com.esri.ymax", "90");
 
-        final AbstractMapper mapper = new DensityMapper();
+        final AbstractMapper mapper = new DensityMapper4();
 
         m_mapDriver = new MapDriver<LongWritable, Text, Text, DoubleWritable>();
         m_mapDriver.setMapper(mapper);
         m_mapDriver.setConfiguration(m_configuration);
 
-        final DensityReducer reducer = new DensityReducer();
+        final CellReducer reducer = new CellReducer();
 
         m_reduceDriver = new ReduceDriver<Text, DoubleWritable, Text, DoubleWritable>();
         m_reduceDriver.setReducer(reducer);

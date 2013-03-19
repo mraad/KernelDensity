@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /**
  */
-public class DensityReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable>
+public final class CellReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable>
 {
     @Override
     protected void reduce(

@@ -11,20 +11,18 @@ import java.util.Map;
 
 /**
  */
-public class RasterFloat extends RasterAbstract
+public final class RasterFloat extends RasterAbstract
 {
     @Override
-    protected void writeRaster(final Map<String, Double> map) throws IOException
+    protected void writeRaster(
+            final Map<String, Double> map,
+            final double xmin,
+            final double ymin,
+            final int ncols,
+            final int nrows,
+            final double cell) throws IOException
     {
-        final double xmin = Double.parseDouble(m_configuration.get("com.esri.xmin", "-180"));
-        final double ymin = Double.parseDouble(m_configuration.get("com.esri.ymin", "-90"));
-        final double xmax = Double.parseDouble(m_configuration.get("com.esri.xmax", "180"));
-        final double ymax = Double.parseDouble(m_configuration.get("com.esri.ymax", "90"));
-        final double cellSize = Double.parseDouble(m_configuration.get("com.esri.cellSize", "1"));
-        final int ncols = (int) Math.floor((xmax - xmin) / cellSize);
-        final int nrows = (int) Math.floor((ymax - ymin) / cellSize);
-
-        writeHeader(xmin, ymin, cellSize, ncols, nrows);
+        writeHeader(xmin, ymin, cell, ncols, nrows);
         writeFloat(map, ncols, nrows);
 
     }
