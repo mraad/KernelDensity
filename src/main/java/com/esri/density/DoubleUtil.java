@@ -2,10 +2,10 @@ package com.esri.density;
 
 /**
  */
-public final class NumeUtil
+public final class DoubleUtil
 {
     /**
-     * Naive implementation
+     * Simple implementation
      *
      * @param s text
      * @return true/false

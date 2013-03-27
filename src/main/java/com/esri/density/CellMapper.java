@@ -55,19 +55,15 @@ public final class CellMapper extends Mapper<LongWritable, Text, Text, DoubleWri
             return;
         }
         final String lonText = tokens[6];
-        if (!NumeUtil.isDouble(lonText))
+        if (!DoubleUtil.isDouble(lonText))
         {
             return;
         }
         final String latText = tokens[7];
-        if (!NumeUtil.isDouble(latText))
+        if (!DoubleUtil.isDouble(latText))
         {
             return;
         }
-
-        final String normal = tokens[8];
-        final String dropped = tokens[9];
-        final String blocked = tokens[10];
 
         final double px = WebMercator.longitudeToX(Double.parseDouble(lonText));
         if (px < m_xmin || px > m_xmax)

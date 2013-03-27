@@ -12,17 +12,17 @@
         mapred.job.tracker=localhadoop:9001
         mapred.child.java.opts=-Xmx1024m
 
-        com.esri.xmin=-78.315661043709
-        com.esri.xmax=-76.847342871129
-        com.esri.ymin=38.158960148519
-        com.esri.ymax=39.607107252499
+        com.esri.xmin=-174.19527777799999
+        com.esri.xmax=178.43756999999999
+        com.esri.ymin=-53.152510000000007
+        com.esri.ymax=79.001194444000006
         com.esri.cell=60
 
     </hdp:configuration>
 
     <hdp:job id="mr-job"
              jar-by-class="com.esri.density.Main"
-             input-path="/user/mraad_admin/voice"
+             input-path="/user/mraad_admin/renre"
              output-path="/user/mraad_admin/raster"
              mapper="com.esri.density.CellMapper"
              combiner="com.esri.density.CellReducer"

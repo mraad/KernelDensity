@@ -9,6 +9,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  */
@@ -23,7 +24,11 @@ public final class CellFilterMapper extends Mapper<LongWritable, Text, Text, Dou
     private double m_xmax;
     private double m_ymax;
     private double m_cell;
-    private int m_key;
+    private int m_numFields;
+    private int m_lonField;
+    private int m_latField;
+    private int m_sumField;
+    private Pattern m_pattern;
 
     @Override
     protected void setup(final Context context) throws IOException, InterruptedException
@@ -35,7 +40,14 @@ public final class CellFilterMapper extends Mapper<LongWritable, Text, Text, Dou
         m_xmax = Double.parseDouble(configuration.get("com.esri.xmax", "180"));
         m_ymax = Double.parseDouble(configuration.get("com.esri.ymax", "90"));
         m_cell = Double.parseDouble(configuration.get("com.esri.cell", "60"));
-        m_key = Integer.parseInt(configuration.get("com.esri.key", "8"));
+
+        final String fieldSep = configuration.get("com.esri.fieldSep", ",");
+        m_pattern = Pattern.compile("tab".equalsIgnoreCase(fieldSep) ? "\t" : fieldSep);
+
+        m_numFields = Integer.parseInt(configuration.get("com.esri.numFields", "16"));
+        m_lonField = Integer.parseInt(configuration.get("com.esri.lonField", "6"));
+        m_latField = Integer.parseInt(configuration.get("com.esri.latField", "7"));
+        m_sumField = Integer.parseInt(configuration.get("com.esri.sumField", "-1"));
 
         m_xmin = WebMercator.longitudeToX(m_xmin);
         m_xmax = WebMercator.longitudeToX(m_xmax);
@@ -49,45 +61,51 @@ public final class CellFilterMapper extends Mapper<LongWritable, Text, Text, Dou
             final Text value,
             final Context context) throws IOException, InterruptedException
     {
-        final String[] tokens = value.toString().split(",");
-        if (tokens.length != 16)
+        final String[] tokens = m_pattern.split(value.toString());
+        if (tokens.length != m_numFields)
         {
             return;
         }
-        final String lonText = tokens[6];
-        if (!NumeUtil.isDouble(lonText))
+        final String lonText = tokens[m_lonField];
+        if (!DoubleUtil.isDouble(lonText))
         {
             return;
         }
-        final String latText = tokens[7];
-        if (!NumeUtil.isDouble(latText))
+        final String latText = tokens[m_latField];
+        if (!DoubleUtil.isDouble(latText))
         {
             return;
         }
 
-        final String text = tokens[m_key];
-        if (!NumeUtil.isDouble(text))
+        final String sumText = tokens[m_sumField];
+        if (!DoubleUtil.isDouble(sumText))
         {
             return;
         }
-        final double nume = Double.parseDouble(text);
+        final double sum = Double.parseDouble(sumText);
+        if (sum == 0.0)
+        {
+            return;
+        }
 
         final double px = WebMercator.longitudeToX(Double.parseDouble(lonText));
         if (px < m_xmin || px > m_xmax)
         {
             return;
         }
+
         final double py = WebMercator.latitudeToY(Double.parseDouble(latText));
         if (py < m_ymin || py > m_ymax)
         {
             return;
         }
+
         final int col = (int) Math.floor((px - m_xmin) / m_cell);
         final int row = (int) Math.floor((py - m_ymin) / m_cell);
 
         m_stringBuilder.setLength(0);
         m_stringBuilder.append(row).append('/').append(col);
 
-        context.write(new Text(m_stringBuilder.toString()), new DoubleWritable(nume));
+        context.write(new Text(m_stringBuilder.toString()), new DoubleWritable(sum));
     }
 }

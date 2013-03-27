@@ -30,13 +30,19 @@
         com.esri.ymax=39.629185383287
         com.esri.cell=60
 
+        com.esri.numFields=14
+        com.esri.fieldSep=,
+        com.esri.lonField=12
+        com.esri.latField=13
+        com.esri.sumField=1
+
     </hdp:configuration>
 
     <hdp:job id="mr-job"
              jar-by-class="com.esri.density.Main"
-             input-path="/user/mraad_admin/voice"
+             input-path="/user/mraad_admin/evdo"
              output-path="/user/mraad_admin/raster"
-             mapper="com.esri.density.CellMapper"
+             mapper="com.esri.density.CellFilterMapper"
              combiner="com.esri.density.CellReducer"
              reducer="com.esri.density.CellReducer"/>
 
@@ -49,7 +55,7 @@
     <bean id="postAction" class="com.esri.density.RasterAscii">
         <property name="configuration" ref="hadoopConfiguration"/>
         <property name="hdfsPath" value="/user/mraad_admin/raster"/>
-        <property name="filePath" value="/tmp/raster.asc"/>
+        <property name="filePath" value="/tmp/reverse.asc"/>
     </bean>
 
     <hdp:job-runner id="runner"
