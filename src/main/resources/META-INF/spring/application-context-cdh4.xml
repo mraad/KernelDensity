@@ -6,14 +6,6 @@
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
 
-    <!--
-    -78.347608170043
-    -76.804034067044
-
-    38.128349719377
-    39.629185383287
-    -->
-
     <hdp:configuration id="hadoopConfiguration">
 
         fs.defaultFS=hdfs://ec2-174-129-69-14.compute-1.amazonaws.com:8020
@@ -24,23 +16,23 @@
         hadoop.socks.server=localhost:6666
         hadoop.rpc.socket.factory.class.default=org.apache.hadoop.net.SocksSocketFactory
 
-        com.esri.xmin=-78.347608170043
-        com.esri.xmax=-76.804034067044
-        com.esri.ymin=38.128349719377
-        com.esri.ymax=39.629185383287
-        com.esri.cell=60
+        com.esri.xmin=-125
+        com.esri.xmax=-66
+        com.esri.ymin=23
+        com.esri.ymax=50
+        com.esri.cell=100000
 
-        com.esri.numFields=14
-        com.esri.fieldSep=,
-        com.esri.lonField=12
-        com.esri.latField=13
-        com.esri.sumField=1
+        com.esri.numFields=22
+        com.esri.fieldSep=tab
+        com.esri.lonField=21
+        com.esri.latField=20
+        com.esri.sumField=11
 
     </hdp:configuration>
 
     <hdp:job id="mr-job"
              jar-by-class="com.esri.density.Main"
-             input-path="/user/mraad_admin/evdo"
+             input-path="/user/mraad_admin/infousa"
              output-path="/user/mraad_admin/raster"
              mapper="com.esri.density.CellFilterMapper"
              combiner="com.esri.density.CellReducer"
@@ -55,7 +47,7 @@
     <bean id="postAction" class="com.esri.density.RasterAscii">
         <property name="configuration" ref="hadoopConfiguration"/>
         <property name="hdfsPath" value="/user/mraad_admin/raster"/>
-        <property name="filePath" value="/tmp/reverse.asc"/>
+        <property name="filePath" value="/tmp/raster.asc"/>
     </bean>
 
     <hdp:job-runner id="runner"
