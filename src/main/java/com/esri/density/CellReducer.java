@@ -1,18 +1,18 @@
 package com.esri.density;
 
 import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
 /**
  */
-public final class CellReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable>
+public final class CellReducer extends Reducer<LongWritable, DoubleWritable, LongWritable, DoubleWritable>
 {
     @Override
     protected void reduce(
-            final Text key,
+            final LongWritable key,
             final Iterable<DoubleWritable> values,
             final Context context) throws IOException, InterruptedException
     {

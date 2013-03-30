@@ -15,7 +15,7 @@ public final class RasterFloat extends RasterAbstract
 {
     @Override
     protected void writeRaster(
-            final Map<String, Double> map,
+            final Map<Long, Double> map,
             final double xmin,
             final double ymin,
             final int ncols,
@@ -28,22 +28,20 @@ public final class RasterFloat extends RasterAbstract
     }
 
     private void writeFloat(
-            final Map<String, Double> map,
+            final Map<Long, Double> map,
             final int ncols,
             final int nrows) throws IOException
     {
         final DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(m_filePath)));
         try
         {
-            final StringBuffer stringBuffer = new StringBuffer();
-            int i = nrows - 1;
+            long i = nrows - 1;
             for (int r = 0; r < nrows; r++)
             {
+                final long row = i << 32;
                 for (int c = 0; c < ncols; c++)
                 {
-                    stringBuffer.setLength(0);
-                    stringBuffer.append(i).append('/').append(c);
-                    final Double val = map.get(stringBuffer.toString());
+                    final Double val = map.get(row | c);
                     if (val != null)
                     {
                         dos.writeFloat(val.floatValue());

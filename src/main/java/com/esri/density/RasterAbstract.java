@@ -43,28 +43,29 @@ public abstract class RasterAbstract implements Callable
     @Override
     public Object call() throws Exception
     {
-        final double xmin = WebMercator.longitudeToX(Double.parseDouble(m_configuration.get("com.esri.xmin", "-180")));
-        final double xmax = WebMercator.longitudeToX(Double.parseDouble(m_configuration.get("com.esri.xmax", "180")));
-        final double ymin = WebMercator.latitudeToY(Double.parseDouble(m_configuration.get("com.esri.ymin", "-90")));
-        final double ymax = WebMercator.latitudeToY(Double.parseDouble(m_configuration.get("com.esri.ymax", "90")));
-        final double cell = Double.parseDouble(m_configuration.get("com.esri.cell", "60"));
+        final double xmin = Double.parseDouble(m_configuration.get("com.esri.xmin", "-180"));
+        final double xmax = Double.parseDouble(m_configuration.get("com.esri.xmax", "180"));
+        final double ymin = Double.parseDouble(m_configuration.get("com.esri.ymin", "-90"));
+        final double ymax = Double.parseDouble(m_configuration.get("com.esri.ymax", "90"));
+
+        final double cell = Double.parseDouble(m_configuration.get("com.esri.cell", "1"));
 
         final int ncols = (int) Math.floor((xmax - xmin) / cell);
         final int nrows = (int) Math.floor((ymax - ymin) / cell);
 
-        final Map<String, Double> map = loadMapFromHDFS();
+        final Map<Long, Double> map = loadMapFromHDFS();
         writeRaster(map, xmin, ymin, ncols, nrows, cell);
         return null;
     }
 
-    private Map<String, Double> loadMapFromHDFS() throws IOException
+    private Map<Long, Double> loadMapFromHDFS() throws IOException
     {
-        final Map<String, Double> map = new HashMap<String, Double>();
+        final Map<Long, Double> map = new HashMap<Long, Double>();
         final String defaultFS = getDefaultFS();
         final Path path = new Path(defaultFS + m_hdfsPath);
         final FileSystem fileSystem = path.getFileSystem(m_configuration);
         final FileStatus fileStatus = fileSystem.getFileStatus(path);
-        if (fileStatus.isDirectory()) // use isDir() for CDH3
+        if (fileStatus.isDir()) // use isDir() for CDH3
         {
             for (final FileStatus childStatus : fileSystem.listStatus(path))
             {
@@ -84,7 +85,7 @@ public abstract class RasterAbstract implements Callable
                             final int index = line.indexOf('\t');
                             final String key = line.substring(0, index);
                             final String val = line.substring(index + 1);
-                            map.put(key, Double.parseDouble(val));
+                            map.put(Long.parseLong(key), Double.parseDouble(val));
                         }
                     }
                     finally
@@ -104,7 +105,7 @@ public abstract class RasterAbstract implements Callable
     }
 
     protected abstract void writeRaster(
-            Map<String, Double> map,
+            Map<Long, Double> map,
             final double xmin,
             final double ymin,
             final int ncols,

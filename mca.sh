@@ -1,2 +1,2 @@
-mvn -P cdh4 -Dmaven.test.skip=true clean package appassembler:assemble
-time sh target/appassembler/bin/KernelDensity cdh4
+mvn -P cdh4 clean package appassembler:assemble
+time sh target/appassembler/bin/KernelDensity

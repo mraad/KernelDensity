@@ -12,12 +12,11 @@ import java.io.IOException;
 
 /**
  */
-public abstract class AbstractMapper extends Mapper<LongWritable, Text, Text, DoubleWritable>
+public abstract class AbstractMapper extends Mapper<LongWritable, Text, LongWritable, DoubleWritable>
 {
-    private static final Log log = LogFactory.getLog(CellMapper.class);
+    private static final Log log = LogFactory.getLog(AbstractMapper.class);
 
     private final KernelFunction m_kernelFunction = new EpanechnikovKernelFunction();
-    private final StringBuffer m_stringBuffer = new StringBuffer();
 
     private double m_xmin;
     private double m_ymin;
@@ -79,10 +78,10 @@ public abstract class AbstractMapper extends Mapper<LongWritable, Text, Text, Do
 
         for (double y = ymin; y < ymax; y += m_cellSize)
         {
+            final long row = (long) Math.floor((y - m_ymin) / m_cellSize) & 0x7FFFL;
             for (double x = xmin; x < xmax; x += m_cellSize)
             {
-                final int col = (int) Math.floor((x - m_xmin) / m_cellSize);
-                final int row = (int) Math.floor((y - m_ymin) / m_cellSize);
+                final long col = (long) Math.floor((x - m_xmin) / m_cellSize) & 0x7FFFL;
                 final double cx = col * m_cellSize + m_xmin + m_cellSize2;
                 if (cx < m_xmin || cx > m_xmax)
                 {
@@ -99,9 +98,7 @@ public abstract class AbstractMapper extends Mapper<LongWritable, Text, Text, Do
                 if (rr < 1.0)
                 {
                     final double w = pw * m_kernelFunction.calc(rr);
-                    m_stringBuffer.setLength(0);
-                    m_stringBuffer.append(row).append('/').append(col);
-                    context.write(new Text(m_stringBuffer.toString()), new DoubleWritable(w));
+                    context.write(new LongWritable((row << 32) | col), new DoubleWritable(w));
                 }
             }
         }

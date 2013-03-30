@@ -2,43 +2,51 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
     <property>
-        <name>hadoop.job.ugi</name>
-        <value>mraad_admin,mraad_admin</value>
+        <name>${namenode.name}</name>
+        <value>${namenode.value}</value>
     </property>
     <property>
         <name>mapred.job.tracker</name>
-        <value>ec2-174-129-69-14.compute-1.amazonaws.com:8021</value>
+        <value>${mapred.job.tracker}</value>
     </property>
     <property>
-        <name>fs.defaultFS</name>
-        <value>hdfs://ec2-174-129-69-14.compute-1.amazonaws.com:8020/</value>
+        <name>com.esri.xmin</name>
+        <value>-180</value>
     </property>
     <property>
-        <name>hadoop.rpc.socket.factory.class.default</name>
-        <value>org.apache.hadoop.net.SocksSocketFactory</value>
+        <name>com.esri.ymin</name>
+        <value>-90</value>
     </property>
     <property>
-        <name>hadoop.socks.server</name>
-        <value>localhost:6666</value>
+        <name>com.esri.xmax</name>
+        <value>180</value>
     </property>
     <property>
-        <name>dfs.client.use.legacy.blockreader</name>
-        <value>true</value>
+        <name>com.esri.ymax</name>
+        <value>90</value>
     </property>
     <property>
-        <name>fs.s3.awsAccessKeyId</name>
-        <value>0SHYYCYBK18Y6MY3WTG2</value>
+        <name>com.esri.cell</name>
+        <value>1</value>
     </property>
     <property>
-        <name>fs.s3.awsSecretAccessKey</name>
-        <value>bpvlK9rjH9tKYlrhMf+0o8jiGg13C9/IXW/5LFOa</value>
+        <name>com.esri.numFields</name>
+        <value>3</value>
     </property>
     <property>
-        <name>fs.s3n.awsAccessKeyId</name>
-        <value>0SHYYCYBK18Y6MY3WTG2</value>
+        <name>com.esri.fieldSep</name>
+        <value>tab</value>
     </property>
     <property>
-        <name>fs.s3n.awsSecretAccessKey</name>
-        <value>bpvlK9rjH9tKYlrhMf+0o8jiGg13C9/IXW/5LFOa</value>
+        <name>com.esri.lonField</name>
+        <value>0</value>
+    </property>
+    <property>
+        <name>com.esri.latField</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>com.esri.sumField</name>
+        <value>2</value>
     </property>
 </configuration>

@@ -21,16 +21,16 @@ public class DensityTest
 {
     private MapDriver<
             LongWritable, Text,
-            Text, DoubleWritable
+            LongWritable, DoubleWritable
             > m_mapDriver;
     private ReduceDriver<
-            Text, DoubleWritable,
-            Text, DoubleWritable
+            LongWritable, DoubleWritable,
+            LongWritable, DoubleWritable
             > m_reduceDriver;
     private MapReduceDriver<
             LongWritable, Text,
-            Text, DoubleWritable,
-            Text, DoubleWritable
+            LongWritable, DoubleWritable,
+            LongWritable, DoubleWritable
             > m_mapReduceDriver;
 
     private Configuration m_configuration;
@@ -50,6 +50,13 @@ public class DensityTest
         return m_kernelFunction.calc(rr);
     }
 
+    private LongWritable toKey(
+            final long row,
+            final long col)
+    {
+        return new LongWritable((row << 32) | col);
+    }
+
     @Before
     public void setUp()
     {
@@ -59,22 +66,22 @@ public class DensityTest
         m_configuration.set("com.esri.xmax", "180");
         m_configuration.set("com.esri.ymax", "90");
 
-        final AbstractMapper mapper = new DensityMapper4();
+        final AbstractMapper mapper = new DensityMapper();
 
-        m_mapDriver = new MapDriver<LongWritable, Text, Text, DoubleWritable>();
+        m_mapDriver = new MapDriver<LongWritable, Text, LongWritable, DoubleWritable>();
         m_mapDriver.setMapper(mapper);
         m_mapDriver.setConfiguration(m_configuration);
 
         final CellReducer reducer = new CellReducer();
 
-        m_reduceDriver = new ReduceDriver<Text, DoubleWritable, Text, DoubleWritable>();
+        m_reduceDriver = new ReduceDriver<LongWritable, DoubleWritable, LongWritable, DoubleWritable>();
         m_reduceDriver.setReducer(reducer);
         m_reduceDriver.setConfiguration(m_configuration);
 
         m_mapReduceDriver = new MapReduceDriver<
                 LongWritable, Text,
-                Text, DoubleWritable,
-                Text, DoubleWritable>();
+                LongWritable, DoubleWritable,
+                LongWritable, DoubleWritable>();
         m_mapReduceDriver.setMapper(mapper);
         m_mapReduceDriver.setReducer(reducer);
         m_mapReduceDriver.setConfiguration(m_configuration);
@@ -95,10 +102,10 @@ public class DensityTest
         m_mapDriver.withInput(
                 new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapDriver.resetOutput();
-        m_mapDriver.addOutput(new Text("89/179"), new DoubleWritable(toWeight(-0.5, -0.5, 0.0, 0.0, 1)));
-        m_mapDriver.addOutput(new Text("89/180"), new DoubleWritable(toWeight(+0.5, -0.5, 0.0, 0.0, 1)));
-        m_mapDriver.addOutput(new Text("90/179"), new DoubleWritable(toWeight(-0.5, +0.5, 0.0, 0.0, 1)));
-        m_mapDriver.addOutput(new Text("90/180"), new DoubleWritable(toWeight(+0.5, +0.5, 0.0, 0.0, 1)));
+        m_mapDriver.addOutput(toKey(89, 179), new DoubleWritable(toWeight(-0.5, -0.5, 0.0, 0.0, 1)));
+        m_mapDriver.addOutput(toKey(89, 180), new DoubleWritable(toWeight(+0.5, -0.5, 0.0, 0.0, 1)));
+        m_mapDriver.addOutput(toKey(90, 179), new DoubleWritable(toWeight(-0.5, +0.5, 0.0, 0.0, 1)));
+        m_mapDriver.addOutput(toKey(90, 180), new DoubleWritable(toWeight(+0.5, +0.5, 0.0, 0.0, 1)));
         m_mapDriver.runTest();
     }
 
@@ -116,10 +123,10 @@ public class DensityTest
         };
         m_mapDriver.withInput(new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapDriver.resetOutput();
-        m_mapDriver.addOutput(new Text("89/179"), new DoubleWritable(toWeight(-0.5, -0.5, 0.1, 0.1, 1)));
-        m_mapDriver.addOutput(new Text("89/180"), new DoubleWritable(toWeight(+0.5, -0.5, 0.1, 0.1, 1)));
-        m_mapDriver.addOutput(new Text("90/179"), new DoubleWritable(toWeight(-0.5, +0.5, 0.1, 0.1, 1)));
-        m_mapDriver.addOutput(new Text("90/180"), new DoubleWritable(toWeight(+0.5, +0.5, 0.1, 0.1, 1)));
+        m_mapDriver.addOutput(toKey(89, 179), new DoubleWritable(toWeight(-0.5, -0.5, 0.1, 0.1, 1)));
+        m_mapDriver.addOutput(toKey(89, 180), new DoubleWritable(toWeight(+0.5, -0.5, 0.1, 0.1, 1)));
+        m_mapDriver.addOutput(toKey(90, 179), new DoubleWritable(toWeight(-0.5, +0.5, 0.1, 0.1, 1)));
+        m_mapDriver.addOutput(toKey(90, 180), new DoubleWritable(toWeight(+0.5, +0.5, 0.1, 0.1, 1)));
         m_mapDriver.runTest();
     }
 
@@ -137,10 +144,10 @@ public class DensityTest
         };
         m_mapDriver.withInput(new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapDriver.resetOutput();
-        m_mapDriver.addOutput(new Text("89/179"), new DoubleWritable(toWeight(-0.5, -0.5, -0.1, -0.1, 1)));
-        m_mapDriver.addOutput(new Text("89/180"), new DoubleWritable(toWeight(+0.5, -0.5, -0.1, -0.1, 1)));
-        m_mapDriver.addOutput(new Text("90/179"), new DoubleWritable(toWeight(-0.5, +0.5, -0.1, -0.1, 1)));
-        m_mapDriver.addOutput(new Text("90/180"), new DoubleWritable(toWeight(+0.5, +0.5, -0.1, -0.1, 1)));
+        m_mapDriver.addOutput(toKey(89, 179), new DoubleWritable(toWeight(-0.5, -0.5, -0.1, -0.1, 1)));
+        m_mapDriver.addOutput(toKey(89, 180), new DoubleWritable(toWeight(+0.5, -0.5, -0.1, -0.1, 1)));
+        m_mapDriver.addOutput(toKey(90, 179), new DoubleWritable(toWeight(-0.5, +0.5, -0.1, -0.1, 1)));
+        m_mapDriver.addOutput(toKey(90, 180), new DoubleWritable(toWeight(+0.5, +0.5, -0.1, -0.1, 1)));
         m_mapDriver.runTest();
     }
 
@@ -159,9 +166,9 @@ public class DensityTest
         m_mapDriver.withInput(
                 new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapDriver.resetOutput();
-        m_mapDriver.addOutput(new Text("89/180"), new DoubleWritable(toWeight(+0.5, -0.5, 0.4, 0.4, 1)));
-        m_mapDriver.addOutput(new Text("90/179"), new DoubleWritable(toWeight(-0.5, +0.5, 0.4, 0.4, 1)));
-        m_mapDriver.addOutput(new Text("90/180"), new DoubleWritable(toWeight(+0.5, +0.5, 0.4, 0.4, 1)));
+        m_mapDriver.addOutput(toKey(89, 180), new DoubleWritable(toWeight(+0.5, -0.5, 0.4, 0.4, 1)));
+        m_mapDriver.addOutput(toKey(90, 179), new DoubleWritable(toWeight(-0.5, +0.5, 0.4, 0.4, 1)));
+        m_mapDriver.addOutput(toKey(90, 180), new DoubleWritable(toWeight(+0.5, +0.5, 0.4, 0.4, 1)));
         m_mapDriver.runTest();
     }
 
@@ -182,9 +189,9 @@ public class DensityTest
         m_mapDriver.withInput(
                 new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapDriver.resetOutput();
-        m_mapDriver.addOutput(new Text("89/179"), new DoubleWritable(toWeight(-0.5, -0.5, x, y, 1)));
-        m_mapDriver.addOutput(new Text("89/180"), new DoubleWritable(toWeight(+0.5, -0.5, x, y, 1)));
-        m_mapDriver.addOutput(new Text("90/179"), new DoubleWritable(toWeight(-0.5, +0.5, x, y, 1)));
+        m_mapDriver.addOutput(toKey(89, 179), new DoubleWritable(toWeight(-0.5, -0.5, x, y, 1)));
+        m_mapDriver.addOutput(toKey(89, 180), new DoubleWritable(toWeight(+0.5, -0.5, x, y, 1)));
+        m_mapDriver.addOutput(toKey(90, 179), new DoubleWritable(toWeight(-0.5, +0.5, x, y, 1)));
         m_mapDriver.runTest();
     }
 
@@ -206,21 +213,21 @@ public class DensityTest
                 new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapDriver.resetOutput();
 
-        m_mapDriver.addOutput(new Text("88/179"), new DoubleWritable(toWeight(-0.5, -1.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("88/180"), new DoubleWritable(toWeight(+0.5, -1.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(88, 179), new DoubleWritable(toWeight(-0.5, -1.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(88, 180), new DoubleWritable(toWeight(+0.5, -1.5, x, y, 2)));
 
-        m_mapDriver.addOutput(new Text("89/178"), new DoubleWritable(toWeight(-1.5, -0.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("89/179"), new DoubleWritable(toWeight(-0.5, -0.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("89/180"), new DoubleWritable(toWeight(+0.5, -0.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("89/181"), new DoubleWritable(toWeight(+1.5, -0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(89, 178), new DoubleWritable(toWeight(-1.5, -0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(89, 179), new DoubleWritable(toWeight(-0.5, -0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(89, 180), new DoubleWritable(toWeight(+0.5, -0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(89, 181), new DoubleWritable(toWeight(+1.5, -0.5, x, y, 2)));
 
-        m_mapDriver.addOutput(new Text("90/178"), new DoubleWritable(toWeight(-1.5, +0.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("90/179"), new DoubleWritable(toWeight(-0.5, +0.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("90/180"), new DoubleWritable(toWeight(+0.5, +0.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("90/181"), new DoubleWritable(toWeight(+1.5, +0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(90, 178), new DoubleWritable(toWeight(-1.5, +0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(90, 179), new DoubleWritable(toWeight(-0.5, +0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(90, 180), new DoubleWritable(toWeight(+0.5, +0.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(90, 181), new DoubleWritable(toWeight(+1.5, +0.5, x, y, 2)));
 
-        m_mapDriver.addOutput(new Text("91/179"), new DoubleWritable(toWeight(-0.5, +1.5, x, y, 2)));
-        m_mapDriver.addOutput(new Text("91/180"), new DoubleWritable(toWeight(+0.5, +1.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(91, 179), new DoubleWritable(toWeight(-0.5, +1.5, x, y, 2)));
+        m_mapDriver.addOutput(toKey(91, 180), new DoubleWritable(toWeight(+0.5, +1.5, x, y, 2)));
 
         m_mapDriver.runTest();
     }
@@ -233,11 +240,9 @@ public class DensityTest
         list.add(new DoubleWritable(2));
         list.add(new DoubleWritable(3));
 
-        final Text rowcol = new Text("rowcol");
-        m_reduceDriver.withInput(
-                rowcol, list);
-        m_reduceDriver.withOutput(
-                rowcol, new DoubleWritable(6));
+        final LongWritable rowcol = new LongWritable();
+        m_reduceDriver.withInput(rowcol, list);
+        m_reduceDriver.withOutput(rowcol, new DoubleWritable(6));
         m_reduceDriver.runTest();
     }
 
@@ -259,10 +264,10 @@ public class DensityTest
         m_mapReduceDriver.withInput(
                 new LongWritable(0), new Text(StringUtils.join(tokens, '\t')));
         m_mapReduceDriver.resetOutput();
-        m_mapReduceDriver.addOutput(new Text("89/179"), new DoubleWritable(w));
-        m_mapReduceDriver.addOutput(new Text("89/180"), new DoubleWritable(w));
-        m_mapReduceDriver.addOutput(new Text("90/179"), new DoubleWritable(w));
-        m_mapReduceDriver.addOutput(new Text("90/180"), new DoubleWritable(w));
+        m_mapReduceDriver.addOutput(toKey(89, 179), new DoubleWritable(w));
+        m_mapReduceDriver.addOutput(toKey(89, 180), new DoubleWritable(w));
+        m_mapReduceDriver.addOutput(toKey(90, 179), new DoubleWritable(w));
+        m_mapReduceDriver.addOutput(toKey(90, 180), new DoubleWritable(w));
         m_mapReduceDriver.runTest();
     }
 

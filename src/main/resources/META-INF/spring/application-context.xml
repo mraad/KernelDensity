@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+       ">
+
+    <hdp:configuration resources="classpath:/core-site.xml"/>
+
+    <hdp:job id="mr-job"
+             jar-by-class="com.esri.density.Main"
+             input-path="/user/${username}/points"
+             output-path="/user/${username}/raster"
+             mapper="com.esri.density.CellGeoMapper"
+             combiner="com.esri.density.CellReducer"
+             reducer="com.esri.density.CellReducer"/>
+
+    <hdp:script id="preAction" language="javascript">
+        if (fsh.test("/user/${username}/raster")){
+        fsh.rmr("/user/${username}/raster")
+        }
+    </hdp:script>
+
+    <bean id="postAction" class="com.esri.density.RasterFloat">
+        <property name="configuration" ref="hadoopConfiguration"/>
+        <property name="hdfsPath" value="/user/${username}/raster"/>
+        <property name="filePath" value="/Users/mraad_admin/Downloads/raster.flt"/>
+    </bean>
+
+    <hdp:job-runner id="runner"
+                    run-at-startup="true"
+                    pre-action="preAction"
+                    post-action="postAction"
+                    job-ref="mr-job"/>
+
+</beans>

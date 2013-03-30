@@ -11,26 +11,14 @@ public final class Main
     public static void main(final String[] args) throws Exception
     {
         final ConfigurableApplicationContext context;
-
-        if (args.length == 1)
+        if (args.length == 0)
         {
-            final String arg0 = args[0];
-
-            if (arg0.startsWith("cdh"))
-            {
-                final String path = "/META-INF/spring/application-context-" + arg0 + ".xml";
-                context = new ClassPathXmlApplicationContext(path, Main.class);
-            }
-            else
-            {
-                context = new FileSystemXmlApplicationContext(arg0);
-            }
-            context.registerShutdownHook();
+            context = new ClassPathXmlApplicationContext("/META-INF/spring/application-context.xml", Main.class);
         }
         else
         {
-            System.err.println("Missing argument cdh3|cdh4|<config>.xml");
+            context = new FileSystemXmlApplicationContext(args[0]);
         }
+        context.registerShutdownHook();
     }
-
 }

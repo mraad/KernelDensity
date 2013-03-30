@@ -4,11 +4,14 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  */
-public class DensityMapper4 extends AbstractMapper
+public class DensityMapper extends AbstractMapper
 {
+
+    private final Pattern m_pattern = Pattern.compile("\t");
 
     @Override
     protected void map(
@@ -16,11 +19,7 @@ public class DensityMapper4 extends AbstractMapper
             final Text value,
             final Context context) throws IOException, InterruptedException
     {
-        final String[] tokens = value.toString().split("\t");
-        if (tokens.length != 4)
-        {
-            return;
-        }
+        final String[] tokens = m_pattern.split(value.toString());
 
         final double px = Double.parseDouble(tokens[1]);
         final double py = Double.parseDouble(tokens[2]);

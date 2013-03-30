@@ -1,7 +1,8 @@
 package com.esri.density;
 
-import java.io.File;
+import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -11,14 +12,14 @@ public final class RasterAscii extends RasterAbstract
 {
     @Override
     protected void writeRaster(
-            final Map<String, Double> map,
+            final Map<Long, Double> map,
             final double xmin,
             final double ymin,
             final int ncols,
             final int nrows,
             final double cell) throws FileNotFoundException
     {
-        final PrintWriter pw = new PrintWriter(new File(m_filePath));
+        final PrintWriter pw = new PrintWriter(new BufferedOutputStream(new FileOutputStream(m_filePath)));
         try
         {
             pw.print("NCOLS ");
@@ -32,15 +33,13 @@ public final class RasterAscii extends RasterAbstract
             pw.print("CELLSIZE ");
             pw.println(cell);
             pw.println("NODATA_VALUE 0");
-            final StringBuffer stringBuffer = new StringBuffer();
-            int i = nrows - 1;
+            long i = nrows - 1;
             for (int r = 0; r < nrows; r++)
             {
+                final long row = i << 32;
                 for (int c = 0; c < ncols; c++)
                 {
-                    stringBuffer.setLength(0);
-                    stringBuffer.append(i).append('/').append(c);
-                    final Double val = map.get(stringBuffer.toString());
+                    final Double val = map.get(row | c);
                     if (val != null)
                     {
                         pw.print(val.doubleValue());

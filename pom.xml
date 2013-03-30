@@ -54,6 +54,15 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -62,6 +71,14 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -84,6 +101,12 @@
     <profiles>
         <profile>
             <id>cdh4</id>
+            <properties>
+                <username>root</username>
+                <namenode.name>fs.defaultFS</namenode.name>
+                <namenode.value>hdfs://h0:8020</namenode.value>
+                <mapred.job.tracker>h0:8021</mapred.job.tracker>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.hadoop</groupId>
@@ -114,6 +137,12 @@
         </profile>
         <profile>
             <id>cdh3</id>
+            <properties>
+                <username>mraad_admin</username>
+                <namenode.name>fs.default.name</namenode.name>
+                <namenode.value>hdfs://localhadoop:9000</namenode.value>
+                <mapred.job.tracker>localhadoop:9001</mapred.job.tracker>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.hadoop</groupId>
