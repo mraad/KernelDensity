@@ -12,9 +12,9 @@ import java.io.IOException;
 
 /**
  */
-public abstract class AbstractMapper extends Mapper<LongWritable, Text, LongWritable, DoubleWritable>
+public abstract class KernelMapper extends Mapper<LongWritable, Text, LongWritable, DoubleWritable>
 {
-    private static final Log log = LogFactory.getLog(AbstractMapper.class);
+    private static final Log log = LogFactory.getLog(KernelMapper.class);
 
     private final KernelFunction m_kernelFunction = new EpanechnikovKernelFunction();
 
@@ -36,13 +36,17 @@ public abstract class AbstractMapper extends Mapper<LongWritable, Text, LongWrit
     protected void setup(final Context context) throws IOException, InterruptedException
     {
         final Configuration configuration = context.getConfiguration();
+
         m_xmin = Double.parseDouble(configuration.get("com.esri.xmin", "-180"));
         m_ymin = Double.parseDouble(configuration.get("com.esri.ymin", "-90"));
         m_xmax = Double.parseDouble(configuration.get("com.esri.xmax", "180"));
         m_ymax = Double.parseDouble(configuration.get("com.esri.ymax", "90"));
+
         m_cellSize = Double.parseDouble(configuration.get("com.esri.cellSize", "1"));
         m_cellSize2 = m_cellSize * 0.5;
+
         m_searchRadius = Double.parseDouble(configuration.get("com.esri.searchRadius", "1"));
+
         if (log.isDebugEnabled())
         {
             log.debug(String.format("%f %f %f %f", m_xmin, m_ymin, m_xmax, m_ymax));
@@ -78,7 +82,7 @@ public abstract class AbstractMapper extends Mapper<LongWritable, Text, LongWrit
 
         for (double y = ymin; y < ymax; y += m_cellSize)
         {
-            final long row = (long) Math.floor((y - m_ymin) / m_cellSize) & 0x7FFFL;
+            final long row = (long) Math.floor((y - m_ymin) / m_cellSize) & 0x7FFFL << 32;
             for (double x = xmin; x < xmax; x += m_cellSize)
             {
                 final long col = (long) Math.floor((x - m_xmin) / m_cellSize) & 0x7FFFL;
@@ -98,7 +102,7 @@ public abstract class AbstractMapper extends Mapper<LongWritable, Text, LongWrit
                 if (rr < 1.0)
                 {
                     final double w = pw * m_kernelFunction.calc(rr);
-                    context.write(new LongWritable((row << 32) | col), new DoubleWritable(w));
+                    context.write(new LongWritable(row | col), new DoubleWritable(w));
                 }
             }
         }

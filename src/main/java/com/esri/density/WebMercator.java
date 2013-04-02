@@ -2,7 +2,7 @@ package com.esri.density;
 
 /**
  */
-public class WebMercator
+public final class WebMercator
 {
     public static final double RADIANS_PER_DEGREES = Math.PI / 180.0;
     public static final double RADIUS = 6378137.0;

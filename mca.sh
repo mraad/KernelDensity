@@ -1,2 +1,2 @@
-mvn -P cdh4 clean package appassembler:assemble
+mvn -P cdh3 clean package appassembler:assemble
 time sh target/appassembler/bin/KernelDensity

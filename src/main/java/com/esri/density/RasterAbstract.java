@@ -48,13 +48,13 @@ public abstract class RasterAbstract implements Callable
         final double ymin = Double.parseDouble(m_configuration.get("com.esri.ymin", "-90"));
         final double ymax = Double.parseDouble(m_configuration.get("com.esri.ymax", "90"));
 
-        final double cell = Double.parseDouble(m_configuration.get("com.esri.cell", "1"));
+        final double cellSize = Double.parseDouble(m_configuration.get("com.esri.cellSize", "1"));
 
-        final int ncols = (int) Math.floor((xmax - xmin) / cell);
-        final int nrows = (int) Math.floor((ymax - ymin) / cell);
+        final int ncols = (int) Math.floor((xmax - xmin) / cellSize);
+        final int nrows = (int) Math.floor((ymax - ymin) / cellSize);
 
         final Map<Long, Double> map = loadMapFromHDFS();
-        writeRaster(map, xmin, ymin, ncols, nrows, cell);
+        writeRaster(map, xmin, ymin, ncols, nrows, cellSize);
         return null;
     }
 
@@ -65,7 +65,7 @@ public abstract class RasterAbstract implements Callable
         final Path path = new Path(defaultFS + m_hdfsPath);
         final FileSystem fileSystem = path.getFileSystem(m_configuration);
         final FileStatus fileStatus = fileSystem.getFileStatus(path);
-        if (fileStatus.isDir()) // use isDir() for CDH3
+        if (fileStatus.isDir()) // use isDirectory() for CDH4
         {
             for (final FileStatus childStatus : fileSystem.listStatus(path))
             {

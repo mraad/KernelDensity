@@ -26,8 +26,12 @@
         <value>90</value>
     </property>
     <property>
-        <name>com.esri.cell</name>
-        <value>10</value>
+        <name>com.esri.cellSize</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>com.esri.searchRadius</name>
+        <value>5</value>
     </property>
     <property>
         <name>com.esri.numFields</name>

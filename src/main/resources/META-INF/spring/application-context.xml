@@ -13,7 +13,7 @@
              jar-by-class="com.esri.density.Main"
              input-path="/user/${username}/points"
              output-path="/user/${username}/raster"
-             mapper="com.esri.density.CellGeoMapper"
+             mapper="com.esri.density.KernelGeoMapper"
              combiner="com.esri.density.CellReducer"
              reducer="com.esri.density.CellReducer"/>
 

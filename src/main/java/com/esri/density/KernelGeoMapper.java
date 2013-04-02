@@ -8,9 +8,8 @@ import java.util.regex.Pattern;
 
 /**
  */
-public class DensityMapper extends KernelMapper
+public class KernelGeoMapper extends KernelMapper
 {
-
     private final Pattern m_pattern = Pattern.compile("\t");
 
     @Override
@@ -21,11 +20,10 @@ public class DensityMapper extends KernelMapper
     {
         final String[] tokens = m_pattern.split(value.toString());
 
-        final double px = Double.parseDouble(tokens[1]);
-        final double py = Double.parseDouble(tokens[2]);
-        final double pw = Double.parseDouble(tokens[3]);
+        final double x = Double.parseDouble(tokens[0]);
+        final double y = Double.parseDouble(tokens[1]);
+        final double w = Double.parseDouble(tokens[2]);
 
-        mapDensity(context, px, py, pw);
+        mapDensity(context, x, y, w);
     }
-
 }

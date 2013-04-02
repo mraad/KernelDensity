@@ -37,7 +37,7 @@ public abstract class CellMapper extends Mapper<LongWritable, Text, LongWritable
         m_ymin = Double.parseDouble(configuration.get("com.esri.ymin", "-90"));
         m_xmax = Double.parseDouble(configuration.get("com.esri.xmax", "180"));
         m_ymax = Double.parseDouble(configuration.get("com.esri.ymax", "90"));
-        m_cell = Double.parseDouble(configuration.get("com.esri.cell", "1"));
+        m_cell = Double.parseDouble(configuration.get("com.esri.cellSize", "1"));
 
         final String fieldSep = configuration.get("com.esri.fieldSep", ",");
         m_pattern = Pattern.compile("tab".equalsIgnoreCase(fieldSep) ? "\t" : fieldSep);
