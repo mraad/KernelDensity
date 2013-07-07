@@ -5,14 +5,14 @@ package com.esri.density;
 public final class CellGeoMapper extends CellMapper
 {
     @Override
-    protected double latitudeToY(final double y)
+    protected double latitudeToY(final double lat)
     {
-        return y;
+        return lat;
     }
 
     @Override
-    protected double longitudeToX(final double x)
+    protected double longitudeToX(final double lon)
     {
-        return x;
+        return lon;
     }
 }

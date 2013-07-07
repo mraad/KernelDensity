@@ -26,7 +26,7 @@
     <bean id="postAction" class="com.esri.density.RasterFloat">
         <property name="configuration" ref="hadoopConfiguration"/>
         <property name="hdfsPath" value="/user/${username}/raster"/>
-        <property name="filePath" value="/Users/mraad_admin/Downloads/raster.flt"/>
+        <property name="filePath" value="/Users/${username}/Downloads/raster.flt"/>
     </bean>
 
     <hdp:job-runner id="runner"

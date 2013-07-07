@@ -53,9 +53,9 @@ public abstract class CellMapper extends Mapper<LongWritable, Text, LongWritable
         m_ymax = latitudeToY(m_ymax);
     }
 
-    protected abstract double latitudeToY(final double ymin);
+    protected abstract double latitudeToY(final double lat);
 
-    protected abstract double longitudeToX(final double xmin);
+    protected abstract double longitudeToX(final double lon);
 
     @Override
     protected void map(

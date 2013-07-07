@@ -82,17 +82,19 @@ public abstract class KernelMapper extends Mapper<LongWritable, Text, LongWritab
 
         for (double y = ymin; y < ymax; y += m_cellSize)
         {
-            final long row = (long) Math.floor((y - m_ymin) / m_cellSize) & 0x7FFFL << 32;
+            final long row = ((long) Math.floor((y - m_ymin) / m_cellSize) & 0x7FFFL);
+            final double cy = row * m_cellSize + m_ymin + m_cellSize2;
+            if (cy < m_ymin || cy > m_ymax)
+            {
+                continue;
+            }
+            // log.debug(String.format("row = %d", row));
             for (double x = xmin; x < xmax; x += m_cellSize)
             {
                 final long col = (long) Math.floor((x - m_xmin) / m_cellSize) & 0x7FFFL;
+                // log.debug(String.format("\tcol=%d", col));
                 final double cx = col * m_cellSize + m_xmin + m_cellSize2;
                 if (cx < m_xmin || cx > m_xmax)
-                {
-                    continue;
-                }
-                final double cy = row * m_cellSize + m_ymin + m_cellSize2;
-                if (cy < m_ymin || cy > m_ymax)
                 {
                     continue;
                 }
@@ -102,7 +104,8 @@ public abstract class KernelMapper extends Mapper<LongWritable, Text, LongWritab
                 if (rr < 1.0)
                 {
                     final double w = pw * m_kernelFunction.calc(rr);
-                    context.write(new LongWritable(row | col), new DoubleWritable(w));
+                    // log.debug(String.format("%d %d %.3f", row, col, w));
+                    context.write(new LongWritable((row << 32) | col), new DoubleWritable(w));
                 }
             }
         }
