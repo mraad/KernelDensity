@@ -5,3 +5,6 @@
 *.war
 *.ear
 *.iml
+
+.idea
+target
